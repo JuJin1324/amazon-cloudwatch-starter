@@ -1,6 +1,10 @@
 # amazon-cloudwatch-starter
 
 ## Amazon CloudWatch Logs
+### 로그 그룹
+> CloudWatch 에서 좌측 네비게이션 바에서 로그 > 로그 그룹 으로 이동한다.  
+> 테이블 상단의 버튼인 '로그 그룹 생성' 버튼을 클릭하여 로그 그룹을 생성할 수 있다.
+
 ### 기능
 > **로그 데이터 쿼리**   
 > CloudWatch Logs Insights를 사용하여 로그 데이터를 대화식으로 검색하고 분석할 수 있습니다. 
@@ -38,7 +42,7 @@
 > 				"collect_list": [
 > 					{
 > 						"file_path": "<로그 파일 경로>",
-> 						"log_group_name": "<application 이름>"
+> 						"log_group_name": "<로그 그룹 이름>"
 > 					}
 > 				]
 > 			}
@@ -53,6 +57,9 @@
 > -a fetch-config \
 > -m ec2 \
 > -c file:/opt/aws/amazon-cloudwatch-agent/bin/config.json -s
+> 
+> # 실행 확인
+> sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -m ec2 -a status
 > ```
 
 ### 참조사이트
@@ -61,7 +68,31 @@
 ---
 
 ## CloudWatch Metrics
-### TODO
+### 데이터 저장
+> CloudWatch 에서 Metrics, 지표는 최대 15개월의 데이터를 저장한다.  
+
+### 데이터 포인트
+> 지표를 구성하는 시간-값 데이터 단위이다.  
+> 시간은 초 단위까지 이며 yyyy-MM-dd HH:mm:ssZ 형식이다.   
+> 예시: 2023-04-16T23:59:59Z  
+> 타임존은 UTC 로 하는 것을 매우 권장한다. 내부적인 통계 및 알람 등에서 UTC 를 기준으로 하기 때문이다.  
+> 
+> **데이터 포인트의 Resolution**  
+> 데이터가 얼마나 자주 수집되는지를 나타내는 개념.  
+> 기본적으로 60초 단위로 수집하며, High resolution 모드에서는 1초 단위로 수집한다.  
+> 일반적으로는 60의 배수로 설정이 가능하며, 60초 미만의 단위로 사용하려면 High resolution 모드로 사용해야 하며 1, 5, 10, 30 으로 설정할 수 있다.   
+> 
+> **보관 기간**  
+> 60초 미만은 최대 3시간만 보관한다.  
+> 60초(1분)는 15일을 보관한다.   
+> 300초(5분)는 63일을 보관한다.    
+> 1시간(3600초)는 455일(15개월)을 보관한다.  
+> 작은 단위의 보관 기간은 큰 단위로 계속 합쳐진다. 예를 들어 1분 단위는 15일 동안만 확인이 가능하며, 15일이 지나면 5분 단위로만 확인이 가능하다.
+> 그 이후 63일이 지나면 1시간 단위로만 확인이 가능하다.  
+> 
+> **주의 사항**  
+> 2주 이상 데이터가 업데이트 되지 않은 Metric 의 경우 콘솔에서 보이지 않음.  
+> 모든 콘솔에서 사라지며 aws cli 로만 확인이 가능해진다.  
 > 
 
 ### 통합 CloudWatch Agent
@@ -75,7 +106,65 @@
 > vi config.json
 > {
 >   ...
->   TODO
+>   "metrics": {
+>       ...
+>       "metrics_collected": {
+>           "cpu": {
+>               "measurement": [
+>                   "cpu_usage_idle",
+>                   "cpu_usage_iowait",
+>                   "cpu_usage_user",
+>                   "cpu_usage_system"
+>               ],
+>               "metrics_collection_interval": 30,
+>               "resources": [
+>                   "*"
+>               ],
+>               "totalcpu": false
+>          },
+>          "disk": {
+>               "measurement": [
+>                   "used_percent",
+>                   "inodes_free"
+>               ],
+>               "metrics_collection_interval": 30,
+>               "resources": [
+>                   "*"
+>               ]
+>          },
+>          "diskio": {
+>               "measurement": [
+>                   "io_time",
+>                   "write_bytes",
+>                   "read_bytes",
+>                   "writes",
+>                   "reads"
+>               ],
+>               "metrics_collection_interval": 30,
+>               "resources": [
+>                   "*"
+>               ]
+>          },
+>          "mem": {
+>              "measurement": [
+>                  "mem_used_percent"
+>              ],
+>              "metrics_collection_interval": 30
+>         },
+>         "netstat": {
+>             "measurement": [
+>                 "tcp_established",
+>                 "tcp_time_wait"
+>             ],
+>             "metrics_collection_interval": 30
+>         },
+>         "swap": {
+>             "measurement": [ 
+>                 "swap_used_percent"
+>             ],
+>             "metrics_collection_interval": 30
+>         }
+>   }
 >   ...
 > }
 > :wq
@@ -85,6 +174,9 @@
 > -a fetch-config \
 > -m ec2 \
 > -c file:/opt/aws/amazon-cloudwatch-agent/bin/config.json -s
+> 
+> # 실행 확인
+> sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -m ec2 -a status
 > ```
 
 ---
