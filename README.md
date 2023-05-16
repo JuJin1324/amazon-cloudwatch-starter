@@ -62,6 +62,23 @@
 > sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -m ec2 -a status
 > ```
 
+### 지표 필터 생성
+> 로그에 설정한 기간 동안 특정 문자가 몇 번 이상 나오면 알람을 받도록 설정할 수 있다.  
+> 예를 들어 10분 동안 ERROR 메시지가 100개가 넘어가면 이메일로 알람을 받도록 설정할 수 있다.  
+> 
+> **설정**  
+> CloudWatch 에서 로그 > 로그 그룹 > 지표 필터를 생성할 로그 그룹을 클릭하여 이동한다.      
+> 로그 그룹 내에서 작업 > 지표 필터 생성 클릭한다.  
+> 
+> **확인**  
+> CloudWatch 에서 지표 > 모든 지표 > 찾아보기 에서 위에서 설정한 지표 필터의 이름을 찾아서 클릭하여 확인한다.  
+> 
+> **경보 생성**  
+> CloudWatch 에서 경보 > 모든 경보 > 경보 생성을 클릭한다.
+> 
+> **참조사이트**  
+> [Amazon CloudWatch 총 정리합니다 - 3: Demo (지표,로그,알람)](https://www.youtube.com/watch?v=8t1kmIDtfqc)  
+
 ### 참조사이트
 > [2. EC2 Linux Command Log 수집 - CW Agent](https://aws-diary.tistory.com/74)  
 
@@ -92,8 +109,7 @@
 > 
 > **주의 사항**  
 > 2주 이상 데이터가 업데이트 되지 않은 Metric 의 경우 콘솔에서 보이지 않음.  
-> 모든 콘솔에서 사라지며 aws cli 로만 확인이 가능해진다.  
-> 
+> 모든 콘솔에서 사라지며 aws cli 로만 확인이 가능해진다.
 
 ### 통합 CloudWatch Agent
 > **에이전트 설치 및 설정**  
@@ -178,12 +194,3 @@
 > # 실행 확인
 > sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -m ec2 -a status
 > ```
-
----
-
-## IntelliJ IDEA 플러그인
-### AWS Toolkit for IntelliJ IDEA
-> 설치: TODO
-
-### CloudWatch Log 보기
-> TODO
