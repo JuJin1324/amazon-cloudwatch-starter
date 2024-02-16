@@ -32,7 +32,7 @@
 > sudo yum install -y amazon-cloudwatch-agent
 > 
 > # 에이전트 설정
-> cd 
+> cd /opt/aws/amazon-cloudwatch-agent/bin
 > vi config.json
 > {
 >   ...
@@ -118,7 +118,7 @@
 > sudo yum install -y amazon-cloudwatch-agent
 > 
 > # 에이전트 설정
-> cd 
+> cd /opt/aws/amazon-cloudwatch-agent/bin
 > vi config.json
 > {
 >   ...
